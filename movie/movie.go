@@ -1,12 +1,13 @@
 package movie
 
 import (
-	"net/http"
-	"strconv"
 	"github.com/PuerkitoBio/goquery"
 	"log"
+	"net/http"
+	"strconv"
 	"strings"
 )
+
 type Movie struct {
 	Rank       string
 	Title      string
@@ -23,7 +24,7 @@ type Movie struct {
 
 var movies []Movie
 
-func GetMovie() []Movie{
+func GetMovie() []Movie {
 	for i := 0; i <= 250; i = i + 25 {
 		//create request
 		client := &http.Client{}
@@ -43,7 +44,6 @@ func GetMovie() []Movie{
 		response, _ := client.Do(reqest)
 		defer response.Body.Close()
 
-
 		doc, err := goquery.NewDocumentFromReader(response.Body)
 
 		if err != nil {
@@ -51,7 +51,6 @@ func GetMovie() []Movie{
 			log.Fatal(err)
 
 		}
-
 
 		doc.Find(".grid_view li").Each(func(i int, contentSelection *goquery.Selection) {
 
@@ -74,7 +73,7 @@ func GetMovie() []Movie{
 			country := strings.TrimSpace(timeTag[1])
 			tag := strings.TrimSpace(timeTag[2])
 
-			intro := contentSelection.Find(".bd p").Eq(1).Text()     //简介
+			intro := contentSelection.Find(".bd p").Eq(1).Text() //简介
 			intro = strings.TrimSpace(intro)
 			ratingNum := contentSelection.Find(".rating_num").Text() //评分
 			img, _ := contentSelection.Find(".pic a img").Attr("src")
