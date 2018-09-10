@@ -2,13 +2,10 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
-	"fmt"
-	"io"
 	"log"
-	"os"
 	"test/hservice"
 	"topMovieCr/movie"
+	"topMovieCr/service"
 )
 
 var movies []movie.Movie
@@ -46,17 +43,9 @@ func main() {
 	//}
 
 	//文件保存
-	jsondata, jsonerr := json.Marshal(movies)
-	if jsonerr != nil {
-		panic(jsonerr)
+	saveErr := service.SaveToJson(movies)
+	if saveErr != nil {
+		panic(saveErr.Error())
 	}
-	fmt.Printf("%s\n", jsondata)
-	fileObj, err := os.OpenFile("topmovie.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
-	if err != nil {
-		fmt.Println("Failed to open the file", err.Error())
-		os.Exit(2)
-	}
-	io.WriteString(fileObj, string(jsondata))
-
 	log.Println("Done")
 }
